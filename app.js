@@ -170,11 +170,7 @@ app.post("/questions", upload.single("image"), async (req, res) => {
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "http://172.25.52.48:3000",
-      "https://kurale.onrender.com",
-    ],
+    origin: ["http://localhost:3000", "https://sbuhack-backend.onrender.com"],
     credentials: true,
   })
 );
