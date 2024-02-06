@@ -168,6 +168,72 @@ app.post("/questions", upload.single("image"), async (req, res) => {
    */
 });
 
+app.post("/questions-alt", async (req, res) => {
+  //receive question and image value as form-data type
+  const question = req.body.question;
+  let imageUrl = req.body.imageUrl;
+
+  // configure openai
+  const completion = await openai.chat.completions.create({
+    model: "gpt-3.5-turbo",
+    messages: [
+      {
+        role: "system",
+        content: "You are a helpful assistant.",
+      },
+      {
+        role: "user",
+        content: question,
+      },
+    ],
+  });
+
+  // retrieve answer from openai
+  const answer = completion.choices.map((choice) => choice.message.content);
+
+  console.log(answer);
+
+  const data = new FormData();
+  data.append("file", imageUrl);
+  data.append("upload_preset", uploadPreset);
+
+  // send answer and image url back to client
+  res.json({ answer, imageUrl });
+
+  /*
+  On client-side, please use this handler:
+    const handleFileChange = (e) => {
+      const file = e.target.files[0];
+      // Add your logic to upload the file
+      console.log(file);
+      const formData = new FormData();
+      formData.append("question", "What is the name of this tree?");
+      formData.append("image", file);
+
+      axios
+        .post("http://localhost:3001/questions", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
+    };
+    return (
+      <>
+        <label htmlFor="file-upload" className="custom-file-upload">
+          Custom Upload
+        </label>
+        <input id="file-upload" type="file" onChange={handleFileChange} />
+      </>
+    );
+   */
+});
+
 app.use(
   cors({
     origin: ["http://localhost:3000", "https://sbuhack-backend.onrender.com"],
@@ -175,6 +241,6 @@ app.use(
   })
 );
 
-app.listen(PORT, "0.0.0.0", () => {
+app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
