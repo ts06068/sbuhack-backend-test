@@ -202,35 +202,35 @@ app.post("/questions-alt", async (req, res) => {
 
   /*
   On client-side, please use this handler:
-    const handleFileChange = (e) => {
-      const file = e.target.files[0];
-      // Add your logic to upload the file
-      console.log(file);
-      const formData = new FormData();
-      formData.append("question", "What is the name of this tree?");
-      formData.append("image", file);
+    const handleFileChangeAlt = async (e) => {
+    const file = e.target.files[0];
 
-      axios
-        .post("http://localhost:3001/questions", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((error) => {
-          alert(error.message);
-        });
-    };
-    return (
-      <>
-        <label htmlFor="file-upload" className="custom-file-upload">
-          Custom Upload
-        </label>
-        <input id="file-upload" type="file" onChange={handleFileChange} />
-      </>
-    );
+    const uploadPreset = "jpxjict6"; // Add your upload preset
+    const data = new FormData();
+    data.append("file", file);
+    data.append("upload_preset", uploadPreset);
+
+    // upload image to cloudinary using cloudinary API
+    const response = await axios
+      .post("https://api.cloudinary.com/v1_1/dwp6hrsi5/image/upload", data)
+      .catch((error) => {
+        alert(error.message);
+      });
+
+    // send POST request to server
+    const imageUrl = response.data.url;
+    const question = "What is the name of this tree?";
+    const serverResponse = await axios
+      .post("https://sbuhack-backend.onrender.com/questions-alt", {
+        question,
+        imageUrl,
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+
+    console.log(serverResponse);
+  };
    */
 });
 
