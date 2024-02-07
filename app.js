@@ -36,6 +36,8 @@ app.use(express.json());
 app.use(cors());
 app.use(express.static("uploads"));
 
+// 789*576 image size
+
 // Connect to MongoDB
 /*
 mongoose.connect(
