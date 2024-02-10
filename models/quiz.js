@@ -22,6 +22,7 @@ const QuizSchema = new Schema({
   userInputAnswer: { type: String },
   isCorrect: { type: Boolean },
   lastUpdated: { type: Date },
+  questionImagePhoto: { type: String },
 });
 
 const Quiz = mongoose.model("Quiz", QuizSchema);

@@ -13,6 +13,7 @@ module.exports.isLoggedIn = (req, res, next) => {
 };
 
 module.exports.isAgentOfQuiz = wrapAsync(async (req, res, next) => {
+  /*
   const uid = req.session.userId;
   const body = req.body;
   const { _id, userInputAnswer } = body;
@@ -26,6 +27,7 @@ module.exports.isAgentOfQuiz = wrapAsync(async (req, res, next) => {
   if (!quiz.agent.equals(uid)) {
     throw new Error("You are not the agent of this quiz");
   }
+  */
 
   next();
 });
