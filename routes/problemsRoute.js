@@ -51,6 +51,7 @@ server process: upload Problem to DB
 res: uploaded all fields of Problem (From DB)
 */
 
+/*
 router.post(
   "/video",
   wrapAsync(async (req, res) => {
@@ -139,6 +140,7 @@ router.post(
     res.json(response);
   })
 );
+*/
 
 router.post(
   "/question",
