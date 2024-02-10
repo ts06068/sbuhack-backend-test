@@ -72,17 +72,20 @@ router.post(
     const isSaved = false;
     const lastUpdated = new Date();
 
+    const sampleImageUrl =
+      "https://res.cloudinary.com/dwp6hrsi5/image/upload/v1707447087/dino-width_cyow2b.jpg";
+
     const response = await openai.chat.completions.create({
       model: "gpt-4-vision-preview",
       messages: [
         {
           role: "user",
           content: [
-            { type: "text", text: "What’s in this image?" },
+            { type: "text", text: "What’s the text in this image?" },
             {
               type: "image_url",
               image_url: {
-                url: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg",
+                url: sampleImageUrl,
               },
             },
           ],
@@ -90,7 +93,7 @@ router.post(
       ],
     });
 
-    const answer = response.choices[0];
+    const answer = response.choices;
 
     // configure openai
     const completion = await openai.chat.completions.create({
