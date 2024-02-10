@@ -8,6 +8,7 @@ const wrapAsync = require("../utils/helper");
 const { isLoggedIn } = require("../middleware/auth");
 
 const { default: OpenAI } = require("openai");
+
 const openai = new OpenAI();
 
 require("dotenv").config();
@@ -38,6 +39,24 @@ res: uploaded all fields of Problem (From DB)
 */
 
 router.post(
+  "/generateVoice",
+  wrapAsync(async (req, res) => {
+    const body = req.body;
+    const { text } = body;
+
+    const audio = await openai.audio.speech.create({
+      model: "tts-1",
+      voice: "echo",
+      input: text,
+    });
+
+    const buffer = Buffer.from(await audio.arrayBuffer());
+
+    res.send(buffer);
+  })
+);
+
+router.post(
   "/question",
   isLoggedIn,
   wrapAsync(async (req, res) => {
@@ -52,6 +71,26 @@ router.post(
     const category = "none";
     const isSaved = false;
     const lastUpdated = new Date();
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4-vision-preview",
+      messages: [
+        {
+          role: "user",
+          content: [
+            { type: "text", text: "What’s in this image?" },
+            {
+              type: "image_url",
+              image_url: {
+                url: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg",
+              },
+            },
+          ],
+        },
+      ],
+    });
+
+    const answer = response.choices[0];
 
     // configure openai
     const completion = await openai.chat.completions.create({
@@ -90,7 +129,7 @@ router.post(
 
     const savedProblem = await newProblem.save();
 
-    res.json({ savedProblem });
+    res.json({ savedProblem, answer });
   })
 );
 
