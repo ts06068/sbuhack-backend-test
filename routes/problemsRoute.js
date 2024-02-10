@@ -135,7 +135,7 @@ router.post(
 
     const savedProblem = await newProblem.save();
 
-    res.json({ savedProblem, answer });
+    res.json({ savedProblem });
   })
 );
 
