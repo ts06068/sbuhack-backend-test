@@ -81,7 +81,7 @@ router.post(
         {
           role: "user",
           content: [
-            { type: "text", text: "What’s the text in this image?" },
+            { type: "text", text: "There is a text in this image. Read it." },
             {
               type: "image_url",
               image_url: {
