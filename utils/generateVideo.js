@@ -8,7 +8,7 @@ const streamifier = require("streamifier");
 require("dotenv").config();
 
 // Function to start the video generation
-async function startVideoGeneration(url) {
+async function startVideoGeneration(url, isForKids) {
   const image = await axios
     .get(url, { responseType: "arraybuffer" })
     .catch((error) => {
@@ -16,13 +16,60 @@ async function startVideoGeneration(url) {
       throw error;
     });
 
-  const imageBuffer = Buffer.from(image.data);
+  let imageBuffer = Buffer.from(image.data);
 
-  const data = new FormData();
-  data.append("image", imageBuffer, "oj770lkkkwynmn6rqguw.jpg");
+  let data = new FormData();
+
   data.append("seed", 0);
   data.append("cfg_scale", 1.8);
   data.append("motion_bucket_id", 127);
+
+  /*
+  const formData = new FormData();
+  formData.append("init_image", fs.readFileSync(initImagePath));
+  formData.append("init_image_mode", "IMAGE_STRENGTH");
+  formData.append("image_strength", 0.35);
+  formData.append(
+    "text_prompts[0][text]",
+    "change character in image into comic-book style and show its motion"
+  );
+  formData.append("cfg_scale", 7);
+  formData.append("samples", 1);
+  formData.append("steps", 30);
+  */
+
+  if (!isForKids) {
+    console.log("isForKids is true");
+
+    const formData = new FormData();
+    formData.append("init_image", imageBuffer);
+    formData.append("init_image_mode", "IMAGE_STRENGTH");
+    formData.append("image_strength", 0.35);
+    formData.append(
+      "text_prompts[0][text]",
+      "change character in image into comic-book style and show its motion"
+    );
+    formData.append("cfg_scale", 7);
+    formData.append("samples", 1);
+    formData.append("steps", 30);
+
+    const responseAnimeImageBuffer = await axios.post(
+      `https://api.stability.ai/v1/generation/stable-diffusion-v1-6/image-to-image`,
+      formData,
+      {
+        headers: {
+          ...formData.getHeaders(),
+          Accept: "image/png",
+          Authorization: `Bearer ${process.env.STABILITY_API_KEY}`,
+        },
+        responseType: "arraybuffer", // To handle binary data
+      }
+    );
+
+    imageBuffer = Buffer.from(responseAnimeImageBuffer.data);
+  }
+
+  data.append("image", imageBuffer, "image.jpg");
 
   try {
     const response = await axios.request({

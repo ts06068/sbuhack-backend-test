@@ -190,7 +190,7 @@ router.post(
     // make narration voice from answerExplanationText
     const audio = await openai.audio.speech.create({
       model: "tts-1",
-      voice: "echo",
+      voice: isForKids ? "nova" : "onyx",
       input: answerExplanationText,
     });
 
@@ -202,7 +202,10 @@ router.post(
         answerNarrationVoice = result.url;
 
         // make video from questionImagePhoto
-        const generationID = await startVideoGeneration(questionImagePhoto);
+        const generationID = await startVideoGeneration(
+          questionImagePhoto,
+          isForKids
+        );
 
         let generationResult = false;
 
