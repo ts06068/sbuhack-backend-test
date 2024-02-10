@@ -57,8 +57,6 @@ router.post(
 
     const speechFile = path.resolve("./speech.mp3");
 
-    const result = await fs.promises.writeFile(speechFile, buffer);
-
     //upload the file to cloudinary
     const file = buffer;
     const uploadPreset = "jpxjict6"; // Add your upload preset
