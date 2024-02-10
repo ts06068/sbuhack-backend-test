@@ -81,7 +81,10 @@ router.post(
         {
           role: "user",
           content: [
-            { type: "text", text: "There is a text in this image. Read it." },
+            {
+              type: "text",
+              text: "There is a text in this image. Only read the text, do not add anything so that I can just copy it.",
+            },
             {
               type: "image_url",
               image_url: {
