@@ -160,7 +160,7 @@ router.post(
 
     //extract text from questionTextPhoto
     let responseTextExtraction = "How does dinosaur look like?";
-    /*
+
     responseTextExtraction = await openai.chat.completions.create({
       model: "gpt-4-vision-preview",
       max_tokens: 4096,
@@ -185,7 +185,6 @@ router.post(
 
     questionTextPhotoTranslatedText =
       responseTextExtraction.choices[0].message.content;
-    */
 
     questionTextPhotoTranslatedText = responseTextExtraction;
 
@@ -329,7 +328,13 @@ router.get(
     const body = req.body;
     const { category, isForKids } = body;
 
-    const problems = await Problem.find({ agent: uid, category, isForKids });
+    let problems;
+
+    if (category === "all") {
+      problems = await Problem.find({ agent: uid, isForKids });
+    } else {
+      problems = await Problem.find({ agent: uid, category, isForKids });
+    }
 
     if (!problems) {
       return res.status(400).json({ message: "Problem not found" });
