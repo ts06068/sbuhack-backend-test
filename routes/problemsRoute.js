@@ -52,6 +52,8 @@ router.post(
 
     const buffer = Buffer.from(await audio.arrayBuffer());
 
+    //send .mp3 buffer
+    res.contentType("audio/mp3");
     res.send(buffer);
   })
 );
