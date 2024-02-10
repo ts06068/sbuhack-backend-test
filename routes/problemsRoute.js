@@ -10,6 +10,8 @@ const { isLoggedIn } = require("../middleware/auth");
 const { default: OpenAI } = require("openai");
 
 const openai = new OpenAI();
+const fs = require("fs");
+const path = require("path");
 
 require("dotenv").config();
 
@@ -52,9 +54,12 @@ router.post(
 
     const buffer = Buffer.from(await audio.arrayBuffer());
 
+    const speechFile = path.resolve("./speech.mp3");
+
+    const result = await fs.promises.writeFile(speechFile, buffer);
+
     //send .mp3 buffer
-    res.contentType("audio/mp3");
-    res.send(buffer);
+    res.send(result);
   })
 );
 
