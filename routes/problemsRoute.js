@@ -53,14 +53,14 @@ router.post(
       input: text,
     });
 
-    const buffer = Buffer.from(await audio.arrayBuffer());
+    const buffer = Buffer.from(await audio.arrayBuffer()).toString("base64");
 
     const speechFile = path.resolve("./speech.mp3");
 
     const result = await fs.promises.writeFile(speechFile, buffer);
 
     //upload the file to cloudinary
-    const file = speechFile;
+    const file = buffer;
     const uploadPreset = "jpxjict6"; // Add your upload preset
     const data = new FormData();
     data.append("file", file);
@@ -70,13 +70,8 @@ router.post(
       .post("https://api.cloudinary.com/v1_1/dwp6hrsi5/upload", data)
       .catch((err) => console.log(err));
 
-    console.log(response.data);
-
-    const read = await fs.promises.readFile(speechFile);
-    console.log(read);
-
     //send .mp3 buffer
-    res.send(read);
+    res.json(response);
   })
 );
 
