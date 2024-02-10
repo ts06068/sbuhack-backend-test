@@ -39,7 +39,7 @@ res: uploaded all fields of Problem (From DB)
 */
 
 router.post(
-  "/generateVoice",
+  "/narrate",
   wrapAsync(async (req, res) => {
     const body = req.body;
     const { text } = body;
