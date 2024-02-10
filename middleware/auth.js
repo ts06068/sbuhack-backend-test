@@ -4,9 +4,11 @@ const User = require("../models/user");
 const wrapAsync = require("../utils/helper");
 
 module.exports.isLoggedIn = (req, res, next) => {
-  if (!req.session.userId) {
+  /*
+  if (!req.session.isLoggedIn) {
     throw new Error("You must be logged in");
   }
+  */
   next();
 };
 

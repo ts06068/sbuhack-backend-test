@@ -12,6 +12,7 @@ const { default: OpenAI } = require("openai");
 const openai = new OpenAI();
 const cloudinary = require("cloudinary").v2;
 const streamifier = require("streamifier");
+const { createWorker } = require("tesseract.js");
 
 const {
   startVideoGeneration,
@@ -51,7 +52,6 @@ server process: upload Problem to DB
 res: uploaded all fields of Problem (From DB)
 */
 
-/*
 router.post(
   "/video",
   wrapAsync(async (req, res) => {
@@ -115,32 +115,18 @@ router.post(
     const body = req.body;
     const { imageUrl } = body;
 
-    let response = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      max_tokens: 4096,
-      messages: [
-        {
-          role: "user",
-          content: [
-            {
-              type: "text",
-              text: "There is a text in this image. Only read the text, do not add anything so that I can just copy it.",
-            },
-            {
-              type: "image_url",
-              image_url: {
-                url: imageUrl,
-              },
-            },
-          ],
-        },
-      ],
-    });
+    (async () => {
+      const worker = await createWorker("eng");
+      const ret = await worker.recognize(
+        "https://tesseract.projectnaptha.com/img/eng_bw.png"
+      );
+      console.log(ret.data.text);
+      await worker.terminate();
+    })();
 
-    res.json(response);
+    res.json({ message: "SUCCESS" });
   })
 );
-*/
 
 router.post(
   "/question",
@@ -320,27 +306,27 @@ server process: find all problems in the category from DB
 res: [_id of Problem...]
 */
 
-router.get(
-  "/question",
-  isLoggedIn,
+router.put(
+  "/favoriteProblems",
   wrapAsync(async (req, res) => {
     const uid = req.session.userId;
     const body = req.body;
+    console.log(req.body);
     const { category, isForKids } = body;
 
     let problems;
 
     if (category === "all") {
-      problems = await Problem.find({ agent: uid, isForKids });
+      problems = await Problem.find({ isForKids });
     } else {
-      problems = await Problem.find({ agent: uid, category, isForKids });
+      problems = await Problem.find({ category, isForKids });
     }
 
     if (!problems) {
       return res.status(400).json({ message: "Problem not found" });
     }
 
-    res.json({ problems });
+    res.json(problems);
   })
 );
 
