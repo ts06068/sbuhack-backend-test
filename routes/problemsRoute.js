@@ -282,7 +282,7 @@ res: 200 (SUCCESS) 400/500 (FAILURE)
 */
 
 router.put(
-  "/favoriteProblems",
+  "/question",
   isLoggedIn,
   wrapAsync(async (req, res) => {
     const uid = req.session.userId;
