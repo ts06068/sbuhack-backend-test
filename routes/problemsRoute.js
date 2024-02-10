@@ -10,9 +10,6 @@ const { isLoggedIn } = require("../middleware/auth");
 const { default: OpenAI } = require("openai");
 
 const openai = new OpenAI();
-const fs = require("fs");
-const path = require("path");
-const axios = require("axios");
 const cloudinary = require("cloudinary").v2;
 const streamifier = require("streamifier");
 
