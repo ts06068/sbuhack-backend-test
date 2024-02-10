@@ -12,6 +12,7 @@ const { default: OpenAI } = require("openai");
 const openai = new OpenAI();
 const fs = require("fs");
 const path = require("path");
+const axios = require("axios");
 
 require("dotenv").config();
 
@@ -57,6 +58,19 @@ router.post(
     const speechFile = path.resolve("./speech.mp3");
 
     const result = await fs.promises.writeFile(speechFile, buffer);
+
+    //upload the file to cloudinary
+    const file = speechFile;
+    const uploadPreset = "jpxjict6"; // Add your upload preset
+    const data = new FormData();
+    data.append("file", file);
+    data.append("upload_preset", uploadPreset);
+
+    const response = await axios
+      .post("https://api.cloudinary.com/v1_1/dwp6hrsi5/upload", data)
+      .catch((err) => console.log(err));
+
+    console.log(response.data);
 
     const read = await fs.promises.readFile(speechFile);
     console.log(read);
