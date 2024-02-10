@@ -59,6 +59,7 @@ router.post(
     const result = await fs.promises.writeFile(speechFile, buffer);
 
     const read = await fs.promises.readFile(speechFile);
+    console.log(read);
 
     //send .mp3 buffer
     res.send(read);
