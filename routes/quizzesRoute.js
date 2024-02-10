@@ -66,7 +66,7 @@ router.post(
         {
           role: "system",
           content:
-            "You are a instructor who gives students a quiz. I will give you a sample question. You make a new question by paraphrasing it. Submit to me your new question and the answer in this format so that I can parse the string: <QuestionText>:<AnswerText>", // content will change by isForKids
+            "You are a instructor who gives students a quiz. I will give you an explanation. You make a new question from my explanation so that the answer should be one word. Just say exactly the question you made so that I can just copy it.", // content will change by isForKids
         },
         {
           role: "user",
@@ -75,9 +75,37 @@ router.post(
       ],
     });
 
-    //TODO: make new question and a one-word answer
-
     const paraphrasedQuestion = completion.choices
+      .map((choice) => choice.message.content)
+      .pop();
+
+    const completionAfter = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a instructor who gives students a quiz. I will give you an explanation. You make a new question from my explanation so that the answer should be one word. Just say exactly the question you made so that I can just copy it.", // content will change by isForKids
+        },
+        {
+          role: "user",
+          content: problem.questionTextPhotoTranslatedText,
+        },
+        {
+          role: "assistant",
+          content: paraphrasedQuestion,
+        },
+        {
+          role: "user",
+          content:
+            "Based on the question you made, what is the answer? Just write the answer so that I can just copy it.",
+        },
+      ],
+    });
+
+    console.log(completionAfter.choices[0]);
+
+    const answer = completionAfter.choices
       .map((choice) => choice.message.content)
       .pop();
 
@@ -89,7 +117,7 @@ router.post(
       agent: uid,
       problemId: _id,
       question: paraphrasedQuestion,
-      answer: problem.answerExplanationText,
+      answer,
       userInputAnswer,
       isCorrect,
       lastUpdated,
@@ -118,7 +146,10 @@ router.put(
 
     const quiz = await Quiz.findById(_id);
 
-    const isCorrect = quiz.answer === userInputAnswer;
+    const realAnswer = quiz.answer;
+
+    const isCorrect =
+      userInputAnswer.toLowerCase() === realAnswer.toLowerCase();
 
     const updatedQuiz = await Quiz.findByIdAndUpdate(
       _id,
