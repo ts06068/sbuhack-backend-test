@@ -35,16 +35,7 @@ const apiSecret = "NY_dwkBohvCJ3aIpw7bbzsMCIDo";
 const uploadPreset = "jpxjict6";
 
 app.use(express.json());
-app.use(
-  cors({
-    origin: [
-      "http://localhost:3000",
-      "https://sbuhack-backend.onrender.com",
-      "http://dynamic.local:3000",
-    ],
-    credentials: true,
-  })
-);
+app.use(cors());
 
 // Cloudinary configuration
 cloudinary.config({
