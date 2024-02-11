@@ -205,7 +205,7 @@ router.post(
         },
         {
           role: "user",
-          content: questionTextPhotoTranslatedText,
+          content: `Summarize the text in 2 sentences: ${questionTextPhotoTranslatedText}`,
         },
       ],
     });

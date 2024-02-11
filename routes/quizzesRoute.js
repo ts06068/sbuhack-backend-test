@@ -105,6 +105,7 @@ router.post(
 
     // using _id, get the problem and get questionImagePhoto
     const questionImagePhoto = problem.questionImagePhoto;
+    const answerVideo = problem.answerVideo;
 
     const answer = completionAfter.choices
       .map((choice) => choice.message.content)
@@ -119,6 +120,7 @@ router.post(
       problemId: _id,
       question: paraphrasedQuestion,
       questionImagePhoto,
+      answerVideo,
       answer,
       userInputAnswer,
       isCorrect,
