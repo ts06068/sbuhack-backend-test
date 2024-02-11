@@ -243,7 +243,7 @@ router.post(
         },
         {
           role: "user",
-          content: `What category is the text, among 'Universe', 'Chemistry', 'Weather'? Just say the category so that I can just copy it: ${questionTextPhotoTranslatedText}`,
+          content: `What category is the text, among 'Universe', 'Chemistry', 'Weather'? Answer only the category so that I can just copy it: ${questionTextPhotoTranslatedText}`,
         },
       ],
     });
