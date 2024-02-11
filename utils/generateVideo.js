@@ -38,7 +38,7 @@ async function startVideoGeneration(url, isForKids) {
   formData.append("steps", 30);
   */
 
-  if (!isForKids) {
+  if (isForKids) {
     console.log("isForKids is true");
 
     const formData = new FormData();

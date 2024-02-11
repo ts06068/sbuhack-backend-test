@@ -143,6 +143,7 @@ router.post(
       isForKids,
     } = body; // questionImagePhoto should have size of 1024x576
 
+    /*
     const revision = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [
@@ -153,6 +154,29 @@ router.post(
         {
           role: "user",
           content: `This is a scanned text from a book: ${questionTextPhotoTranslatedText}. Guess the context based on the scanned word, then explain them in 3 sentences easily. Do not include in answer that you are not sure about context but say only about context you guessed confidently.`,
+        },
+      ],
+    });
+    */
+
+    // extract text from questionTextPhoto using openai
+    const revision = await openai.chat.completions.create({
+      model: "gpt-4-vision-preview",
+      messages: [
+        {
+          role: "user",
+          content: [
+            {
+              type: "text",
+              text: "There are some text in the image. Read every text you see in the image and exactly write it as a paragraph.",
+            },
+            {
+              type: "image_url",
+              image_url: {
+                url: questionTextPhoto,
+              },
+            },
+          ],
         },
       ],
     });
