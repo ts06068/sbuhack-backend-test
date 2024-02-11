@@ -159,6 +159,9 @@ router.post(
     });
     */
 
+    console.log("questionTextPhoto:", questionTextPhoto);
+    console.log("questionImagePhoto:", questionImagePhoto);
+
     // extract text from questionTextPhoto using openai
     const revision = await openai.chat.completions.create({
       model: "gpt-4-vision-preview",
