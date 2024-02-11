@@ -40,7 +40,7 @@ app.use(
     origin: [
       "http://localhost:3000",
       "https://sbuhack-backend.onrender.com",
-      "dynamic.local:3000",
+      "http://dynamic.local:3000",
     ],
     credentials: true,
   })
