@@ -37,7 +37,11 @@ const uploadPreset = "jpxjict6";
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://sbuhack-backend.onrender.com"],
+    origin: [
+      "http://localhost:3000",
+      "https://sbuhack-backend.onrender.com",
+      "dynamic.local:3000",
+    ],
     credentials: true,
   })
 );
